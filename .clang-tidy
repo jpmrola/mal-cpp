@@ -1,0 +1,14 @@
+# .clang-tidy
+Checks: '-*,readability-identifier-naming,performance-*,google-*'
+WarningsAsErrors: '*'
+CheckOptions:
+  - key: modernize-loop-convert
+    value: true
+  - key: modernize-use-using
+    value: true
+  - key: modernize-use-nullptr
+    value: true
+  - key: modernize-use-override
+    value: true
+  - key: modernize-use-noexcept
+    value: true
