@@ -5,6 +5,7 @@
 #include <deque>
 #include <functional>
 #include <any>
+#include <vector>
 
 template <typename T>
 struct ValueType {
@@ -37,8 +38,8 @@ using Sym = ValueType<std::any>;
 using Value = std::variant<Nil, Int, Bool, Str, Sym, struct List, struct Func>;
 
 struct List {
-    std::deque<Value> value;
-    std::string token;
+    std::vector<Value> value;
+    std::string token = {};
     static inline const char* typeInfo = "list";
 };
 

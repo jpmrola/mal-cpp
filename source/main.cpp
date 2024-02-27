@@ -4,6 +4,7 @@
 
 #include "read.hpp"
 #include "eval.hpp"
+#include "env.hpp"
 
 static void traverseLists(const List &list) {
     auto& tokens = list.value;
@@ -31,12 +32,13 @@ std::string PRINT(const Value& input) {
 }
 
 std::string rep(std::string input) {
-    std::string output = "Result:";
+    static ReplEnv rootEnv;
     Ast ast = READ(std::move(input));
     traverseLists(ast);
+    std::string output = "Result:";
     std::cout << '\n';
     for(const Value& list : ast.value) {
-	auto res = EVAL(list);
+	auto res = EVAL(list, rootEnv);
 	output += "\n\tList Value: ";
 	output += PRINT(res);
     }
