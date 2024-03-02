@@ -33,6 +33,9 @@ Value EVAL(const Value& ast, ReplEnv& env) {
 	} else {
 	    if(std::holds_alternative<Sym>(astList.value.at(0))) {
 		const Sym& firstSymbol = std::get<Sym>(astList.value.at(0));
+		if(astList.value.size() == 1) {
+		    return EVAL(firstSymbol, env);
+		}
 		const bool secondIsSymbol = std::holds_alternative<Sym>(astList.value.at(1));
 		if(firstSymbol.token == "def!") {
 		    if(secondIsSymbol) {

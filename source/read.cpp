@@ -117,7 +117,7 @@ static bool isNumber(const std::string& token) {
 
 Value classify(const std::string &token) {
     if(token == "nil") {
-        return Nil{};
+        return Nil{ token };
     } else if(token[0] == '(') {
         return Sym { token , token };
     } else if(token[0] == ')') {

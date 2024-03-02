@@ -2,25 +2,25 @@
 
 #include "env.hpp"
 
-static bool ListTypes(const Value& list) {
+static bool IsListArithmetic(const Value& list) {
     List listArgs = std::get<List>(list);
-    bool allNumeric = true;
+    bool allArithmetic = true;
     bool allStrings = true;
     for(const Value& val : listArgs.value) {
 	std::visit([&](const auto& value) {
-	    if constexpr (std::is_arithmetic_v<decltype(value.value)>) {
+	    if constexpr(std::is_arithmetic_v<decltype(value.value)>) {
 		allStrings = false; 
-	    } else if constexpr (std::is_same_v<decltype(value.value), std::string>) {
-		allNumeric = false;
+	    } else if constexpr(std::is_same_v<decltype(value.value), std::string>) {
+		allArithmetic = false;
 	    } else {
-		allNumeric = false;
+		allArithmetic = false;
 		allStrings = false;
 	    }
 	}, val);
     }
-    if (!allNumeric && !allStrings) {
-	throw std::runtime_error("Syntax error: List contains a mix of numeric and string types");
-    } else if(allNumeric) {
+    if(!allArithmetic && !allStrings) {
+	throw std::runtime_error("Syntax error: List contains a mix of arithmetic and string types");
+    } else if(allArithmetic) {
 	return true;
     } else {
 	return false;
@@ -45,7 +45,7 @@ static auto constexpr StrVisitor = [](const auto& x) -> std::string {
 
 Value addOp(const Value &args) {
     if(std::holds_alternative<List>(args)) {
-	if(ListTypes(args)) {
+	if(IsListArithmetic(args)) {
 	    List listArgs = std::get<List>(args);
 	    int res = std::accumulate(
 		listArgs.value.begin(), listArgs.value.end(), 0,
@@ -69,7 +69,7 @@ Value addOp(const Value &args) {
 
 Value subOp(const Value &args) {
     if (std::holds_alternative<List>(args)) {
-	if (ListTypes(args)) {
+	if(IsListArithmetic(args)) {
 	    List listArgs = std::get<List>(args);
 	    int res = std::accumulate(
 		listArgs.value.begin() + 1, listArgs.value.end(), std::get<Int>(listArgs.value.at(0)).value,
@@ -87,7 +87,7 @@ Value subOp(const Value &args) {
 
 Value mulOp(const Value &args) {
     if (std::holds_alternative<List>(args)) {
-	if (ListTypes(args)) {
+	if(IsListArithmetic(args)) {
 	    List listArgs = std::get<List>(args);
 	    int res = std::accumulate(
 		listArgs.value.begin(), listArgs.value.end(), 1,
@@ -105,7 +105,7 @@ Value mulOp(const Value &args) {
 
 Value divOp(const Value &args) {
     if (std::holds_alternative<List>(args)) {
-	if (ListTypes(args)) {
+	if(IsListArithmetic(args)) {
 	    List listArgs = std::get<List>(args);
             int res = std::accumulate(
 		listArgs.value.begin() + 1, listArgs.value.end(), std::get<Int>(listArgs.value.at(0)).value,

@@ -29,9 +29,11 @@ struct ReplEnv {
     };
 
     void set(const std::string &&key, const Value &&val) {
+	envValues.erase(key);
 	envValues.emplace(key, val);
     }
     void set(const std::string& key, const Value& val) {
+	envValues.erase(key);
 	envValues.insert({key, val});
     }
     std::optional<const ReplEnv*> find(const std::string& key) const {

@@ -2,7 +2,6 @@
 
 #include <variant>
 #include <string>
-#include <deque>
 #include <functional>
 #include <any>
 #include <vector>
@@ -12,23 +11,13 @@ struct ValueType {
     ValueType(T val, const std::string& tok) : value(val), token(tok) {}
     T value;
     const std::string token;
-    static inline const char* typeInfo;
 };
 
 struct Nil {
+    explicit Nil(const std::string& tok) : token(tok) {}
     const bool value = false;
     const std::string token;
-    static inline const char* typeInfo = "nil";
 };
-
-template <>
-const char* ValueType<int>::typeInfo = "int";
-template <>
-const char* ValueType<bool>::typeInfo = "bool";
-template <>
-const char* ValueType<std::string>::typeInfo = "string";
-template <>
-const char* ValueType<std::any>::typeInfo = "symbol";
 
 using Int = ValueType<int>;
 using Bool = ValueType<bool>;
@@ -39,15 +28,13 @@ using Value = std::variant<Nil, Int, Bool, Str, Sym, struct List, struct Func>;
 
 struct List {
     std::vector<Value> value;
-    std::string token = {};
-    static inline const char* typeInfo = "list";
+    const std::string token = {};
 };
 
 using Ast = List;
 
 struct Func {
     std::function<Value(const Value&)> value;
-    std::string token = {};
-    static inline const char* typeInfo = "function";
+    const std::string token = {};
 };
 
